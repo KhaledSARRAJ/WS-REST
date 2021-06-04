@@ -32,17 +32,17 @@ public class DeviseRestCtrl {
 	@Autowired
 	private ServiceDevise serviceDevise;
 	
-	//localhost:8585/serverRest/devise-api-rest/devise/EUR
+	//localhost:8585/serverRest/devise-api-rest/public/devise/EUR
 	/*
 	 //V1 
-	@GetMapping("/public/devise/{codeDevise}")
+	@GetMapping("/public/devise//{codeDevise}")
 	public Devise getDeviseByCode(@PathVariable("codeDevise") String codeDevise) {
 		return serviceDevise.rechercherDeviseParCode(codeDevise);
 	}*/
 	
 	/*
 	//V2 :
-	@GetMapping("/public/devise/{codeDevise}")
+	@GetMapping("/public/devise//{codeDevise}")
 	public ResponseEntity<?> getDeviseByCode(@PathVariable("codeDevise") String codeDevise) {
 		try {
 			Devise dev = serviceDevise.rechercherDeviseParCode(codeDevise);
@@ -82,24 +82,26 @@ public class DeviseRestCtrl {
 	// dans la partie invisible body de la requete HTTP
 	// et avec Content-Type = application/json dans le header de la requête HTTP
 	@PostMapping("/private/devise")
+	//@PreAuthorize("hasRole('ADMIN')")
 	public Devise postNewDevise(@Valid @RequestBody Devise d) {
 		
 			Devise deviseSauvegardee = serviceDevise.createDevise(d);
 			return deviseSauvegardee;
 	}
 	
-	//URL = localhost:8585/serverRest/devise-api-rest/devise 
+	//URL = localhost:8585/serverRest/devise-api-rest/private/devise 
 	// a appeler en mode PUT via POSTMAN ou autre
 	// et avec { "code" : "M1",	"nom" : "monnaie1Bis",	"change" : 675.67 } 
 	// dans la partie invisible body de la requete HTTP
 	// et avec Content-Type = application/json dans le header de la requête HTTP
+	//@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/private/devise")
 	public Devise updateDevise(@RequestBody Devise d) {
 			serviceDevise.updateDevise(d);
 			return d;//en tant que devise sauvegardée (mise à jour)
 	}
 	
-	////localhost:8585/serverRest/private/devise-api-rest/private/devise/m1 (DELETE)
+	////localhost:8585/serverRest/devise-api-rest/private/devise/m1 (DELETE)
 	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/private/devise/{codeDevise}")
 	public ResponseEntity<?> deleteDeviseByCode(@PathVariable("codeDevise") String codeDevise) {
@@ -108,8 +110,8 @@ public class DeviseRestCtrl {
 	}
 	
 	
-	//localhost:8585/serverRest/public/devise-api-rest/devise
-	//localhost:8585/serverRest/public/devise-api-rest/devise?changeMini=1.05
+	//localhost:8585/serverRest/devise-api-rest/public/devise
+	//localhost:8585/serverRest/devise-api-rest/public/devise?changeMini=1.05
 	@GetMapping("/public/devise")
 	public List<Devise> getDevisesByCriteria(
 			  @RequestParam(value="changeMini",required=false) Double changeMini) {

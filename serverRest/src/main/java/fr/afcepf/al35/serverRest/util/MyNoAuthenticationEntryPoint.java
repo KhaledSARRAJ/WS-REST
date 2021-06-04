@@ -1,4 +1,6 @@
-package fr.afcepf.al35.serverRest.security;
+package fr.afcepf.al35.serverRest.util;
+
+
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,3 +22,8 @@ public class MyNoAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
     }
 }
+
+    
+
+
+

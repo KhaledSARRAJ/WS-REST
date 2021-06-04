@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.afcepf.al35.serverRest.dto.LoginRequest;
 import fr.afcepf.al35.serverRest.dto.LoginResponse;
-import fr.afcepf.al35.serverRest.security.JwtTokenProvider;
+import fr.afcepf.al35.serverRest.util.JwtTokenProvider;
+
+
 
 @RestController
 @RequestMapping(value="/devise-api-rest/public/login" , headers="Accept=application/json")
@@ -26,7 +28,7 @@ public class LoginRestCtrl {
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
-	//http://localhost:8383/springBootWs/devise-api/public/login
+	//http://localhost:8585/serverRest/devise-api-rest/public/login
 	//avec { "username" : "user1" , "password" : "pwd1" }
 	//en retour { "message" :  "..." , "token" ; "..." , ...}
 	@PostMapping("")
@@ -55,3 +57,4 @@ public class LoginRestCtrl {
 	}
 
 }
+

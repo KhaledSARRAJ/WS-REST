@@ -14,8 +14,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import fr.afcepf.al35.serverRest.security.JwtAuthenticationFilter;
-import fr.afcepf.al35.serverRest.security.MyNoAuthenticationEntryPoint;
+import fr.afcepf.al35.serverRest.util.JwtAuthenticationFilter;
+import fr.afcepf.al35.serverRest.util.MyNoAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -24,13 +24,11 @@ import fr.afcepf.al35.serverRest.security.MyNoAuthenticationEntryPoint;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
-	@Autowired
-	private JwtAuthenticationFilter jwtAuthenticationFilter;
-	@Autowired
-	private MyNoAuthenticationEntryPoint unauthorizedHandler;
+
 	@Autowired
 	public void globalUserDetails(final AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication().withUser("user1").password(passwordEncoder.encode("pwd1")).roles("USER")
+		auth.inMemoryAuthentication()
+		.withUser("user1").password(passwordEncoder.encode("pwd1")).roles("USER")
 		.and().withUser("admin1").password(passwordEncoder.encode("pwd1")).roles("ADMIN")
 		.and().withUser("user2").password(passwordEncoder.encode("pwd2")).roles("USER")
 		.and().withUser("admin2").password(passwordEncoder.encode("pwd2")).roles("ADMIN");
@@ -41,13 +39,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
+	
+	@Autowired
+	private JwtAuthenticationFilter jwtAuthenticationFilter;
+	
+	@Autowired
+	private MyNoAuthenticationEntryPoint unauthorizedHandler;
 
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 		.antMatchers("/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg",
 		"/**/*.jpg", "/**/*.html", "/**/*.css", "/**/*.js").permitAll()
-		.antMatchers(HttpMethod.POST,"/devise-api-rest/public/login").permitAll() //ecran login s'appelle auth
+		.antMatchers(HttpMethod.POST,"/devise-api-rest/public/login").permitAll()
 		.antMatchers("/devise-api-rest/public/**").permitAll()
 		.antMatchers("/devise-api-rest/private/**").authenticated()
 		.and().cors() //enable CORS (avec @CrossOrigin sur class @RestController)
@@ -58,6 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
 		// Custom filter for authenticating users using tokens
-		.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+		.addFilterBefore(jwtAuthenticationFilter,
+		UsernamePasswordAuthenticationFilter.class);
 	}
 }

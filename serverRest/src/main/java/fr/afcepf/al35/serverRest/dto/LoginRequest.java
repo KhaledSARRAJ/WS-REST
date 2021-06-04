@@ -1,4 +1,5 @@
 package fr.afcepf.al35.serverRest.dto;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
