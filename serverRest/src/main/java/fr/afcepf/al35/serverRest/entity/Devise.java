@@ -20,32 +20,32 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Getter @Setter @ToString @NoArgsConstructor
-@Table(name="devise")
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@Table(name = "devise")
 public class Devise {
 	@Id
-	private String code; //"EUR" , "USD" , "GBP" , "JPY"
-	
-	@Length(min=3, max=20, message = "Nom trop long ou trop court")
+	private String code; // "EUR" , "USD" , "GBP" , "JPY"
+
+	@Length(min = 3, max = 20, message = "Nom trop long ou trop court")
 	private String nom;
-	
-	@Column(name="echange")
+
+	@Column(name = "echange")
 	@Min(0)
 	@Max(2345)
 	private Double change;
-	
+
 	@JsonIgnore
-	@OneToMany(mappedBy="devise")
+	@OneToMany(mappedBy = "devise")
 	public List<Pays> pays;
-	
-	
+
 	public Devise(String code, String nom, Double change) {
 		super();
 		this.code = code;
 		this.nom = nom;
 		this.change = change;
 	}
-	
-	
 
 }
